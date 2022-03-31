@@ -1,13 +1,21 @@
 package Formularios;
 
+import Dados.ListaAgendamentos;
+import Modelos.AgendamentoCadastrado;
+
 import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
 
 public class FormVerAgendamentos extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTable table1;
+    private DefaultTableModel model;
 
     public FormVerAgendamentos() {
         setContentPane(contentPane);
@@ -19,28 +27,35 @@ public class FormVerAgendamentos extends JDialog {
                 onCancel();
             }
         });
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        buttonCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
     }
+
+        private void createUIComponents () {
+            // TODO: place custom component creation code here
+            var listaAgendamentos = ListaAgendamentos.retornaTodos();
+            CriarListaAgendamento(listaAgendamentos);
+        }
+
+
+        private void CriarListaAgendamento (List<AgendamentoCadastrado> listaAgendamento) {
+            if (table1 == null)
+                table1 = new JTable();
+            if (model == null) {
+                model = new DefaultTableModel() {
+                    @Override
+                    public int getColumnCount() {
+                        return 4;
+                    }
+                }; // essa llnnha é para a quantidde de coluinas
+            }
+            model.getDataVector().removeAllElements();
+            model.setColumnCount(0);
+            if (listaAgendamento.stream().count() > 0) // se for maior que 0 executa:
+                model.addRow(new Object[]{"OS", "Data", "Cliente", "Equipamento"});
+            listaAgendamento.forEach(agendamento -> model.addRow(new Object[]{agendamento.OrdemDeServiço, agendamento.Dia, agendamento.Cliente, agendamento.Equipamento}));
+            table1.setModel(model);
+            table1.revalidate();
+        }
+
 
     private void onCancel() {
         // add your code here if necessary

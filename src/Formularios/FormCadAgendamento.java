@@ -1,5 +1,6 @@
 package Formularios;
 
+import Dados.ListaAgendamentos;
 import Modelos.AgendamentoCadastrado;
 
 import javax.swing.*;
@@ -21,11 +22,6 @@ public class FormCadAgendamento extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
 
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -68,12 +64,9 @@ public class FormCadAgendamento extends JDialog {
     agendamento.TécnicoRecolheu = txtTecnico.getText();
     agendamento.Equipamento = txtEquipamento.getText();
     agendamento.ServicoSolicitado = txtServico.getText();
+    ListaAgendamentos.adicionarAgendamento(agendamento);
     dispose();
 
-    }
-    private void onOK() {
-        // add your code here
-        dispose();
     }
 
     private void onCancel() {
